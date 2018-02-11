@@ -1,3 +1,5 @@
+// http://www.mattgreer.org/articles/promises-in-wicked-detail/
+
 function Promise(fn) {
   var value,
       state = 'pending',
@@ -5,6 +7,7 @@ function Promise(fn) {
 
   function resolve(newValue) {
     try {
+      // 如果是个Promise 或者thenable
       if (newValue && typeof newValue.then === 'function') {
         newValue.then(resolve, reject)
         return
@@ -69,18 +72,25 @@ function Promise(fn) {
  * @feature 正确处理
  * @returns {Promise}
  */
-function getSuccess() {
-  return new Promise(function(resolve) {
-    setTimeout(function(resp) {
-      resp = { status: 200, data: 'resp', error: null }
-      resolve(resp.data)
-    }, 800)
-  })
-}
-
-getSuccess().then(function(data) {
-    console.log(data)
-  })
+// function getSuccess() {
+//   return new Promise(function(resolve, reject) {
+//     setTimeout(function(resp) {
+//       resp = { status: 200, data: 'ok', error: null }
+//       if (resp.error) {
+//         reject(resp.error)
+//       } else {
+//         resolve(resp.data)
+//       }
+//
+//     }, 800)
+//   })
+// }
+//
+// getSuccess().then(function(data) {
+//   console.log(data)
+// }, function(error) {
+//   console.log(error)
+// })
 
 /**
  * @feature 错误处理
@@ -92,8 +102,9 @@ getSuccess().then(function(data) {
 //       resp = { status: 404, data: 'error', error: 'not found!!' }
 //       if (resp.error) {
 //         reject(resp.error)
+//       } else {
+//         resolve(resp.data)
 //       }
-//       resolve(resp.data)
 //     })
 //   })
 // }
